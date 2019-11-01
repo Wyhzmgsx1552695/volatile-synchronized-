@@ -3,7 +3,7 @@ import static java.lang.Thread.sleep;
 public class volatileTest extends Thread{
 
     public   static volatile int  n  =   0 ;
-    public static synchronized void inc(){
+    public static synchronized void inc(){//使用synchronized定义自增操作后，自增操作为原子操作，输出值等于1000
         n++;
     }
     public    void  run()
@@ -12,9 +12,8 @@ public class volatileTest extends Thread{
             try
             {
                 //inc();
-                n++;
-                sleep( 3 );  //  为了使运行结果更随机，延迟3毫秒
-
+                n++;//由于此操作与n变量以前的值相关，volatile无法确保对n的此操作为原子操作，因此输出值小于1000。
+                sleep( 3 );  
             }
             catch  (Exception e)
             {
@@ -35,5 +34,6 @@ public class volatileTest extends Thread{
             //  100个线程都执行完后继续
             threads[i].join();
         System.out.println( " n= "   +  volatileTest.n);
+        //如果对n的操作是原子的，输出的结果应该为1000。
     }
 }
